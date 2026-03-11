@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tarjetas</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #292929, #0e0e0e);
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center; 
+        width: 100%;
+        height: 100%;
+      }
+
+      .titulo {
+        color: #f0f0f0; 
+        text-transform: uppercase;
+        font-size: 3em; 
+        margin-top: -20px; 
+        margin-bottom: 20px; 
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      }
+
+      .escena {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+        width: 90%;
+        max-width: 1200px;
+        perspective: 1000px;
+      }
+
+      .card {
+        position: relative;
+        width: 240px;
+        height: 320px;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        border-radius: 15px;
+        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        box-shadow: 0 10px 30px rgba(231, 21, 109, 0.205);
+      }
+
+      .card:hover {
+        transform: rotateY(180deg);
+        box-shadow: 0 15px 40px rgba(112, 11, 53, 0.205);
+      }
+
+      .face_card {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+        backface-visibility: hidden;
+        transition: 0.8s;
+      }
+
+      .face_card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .face_card.face_card_back {
+        transform: rotateY(180deg);
+      }
+
+      .card:hover .face_card.face_card_front {
+        filter: brightness(1.2);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="main-container">
+      <h1 class="titulo">elije uno y leeré tu futuro</h1>
+
+      <div class="escena">
+        <div class="card">
+          <div class="face_card face_card_front">
+            <img src="b1.jpg" alt="" />
+          </div>
+          <div class="face_card face_card_back">
+            <img src="b2.jpeg" alt="" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="face_card face_card_front">
+            <img src="b1.jpg" alt="" />
+          </div>
+          <div class="face_card face_card_back">
+            <img src="a2.jfif" alt="" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="face_card face_card_front">
+            <img src="b1.jpg" alt="" />
+          </div>
+          <div class="face_card face_card_back">
+            <img src="c2.jpg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
