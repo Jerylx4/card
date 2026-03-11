@@ -24,7 +24,6 @@
         color: #f0f0f0;
       }
 
-      /* Canvas para el fondo de estrellas y nebulosas */
       #space-bg {
         position: fixed;
         top: 0;
@@ -36,9 +35,18 @@
 
       .main-container {
         position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
         flex-direction: column;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
         justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
         align-items: center;
         width: 100%;
         height: 100%;
@@ -62,9 +70,16 @@
       }
 
       .escena {
+        -webkit-perspective: 1000px;
         perspective: 1000px;
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
         justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
         align-items: center;
       }
 
@@ -73,15 +88,18 @@
         width: 300px;
         height: 400px;
         cursor: pointer;
+        -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
-        border-radius: 20px;
+        -webkit-transition: -webkit-transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        -o-transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         box-shadow: 0 10px 30px rgba(137, 43, 226, 0.418);
         outline: none;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      /* Clase controlada por JS en lugar de :hover directo */
       .card.is-flipped {
+        -webkit-transform: rotateY(180deg);
         transform: rotateY(180deg);
         box-shadow: 0 15px 40px rgba(138, 43, 226, 0.4);
       }
@@ -94,10 +112,13 @@
         height: 100%;
         border-radius: 20px;
         overflow: hidden;
+        -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         background-color: #111;
         border: 2px solid rgba(138, 43, 226, 0.3);
         box-sizing: border-box;
+        -webkit-transition: 0.8s;
+        -o-transition: 0.8s;
         transition: 0.8s;
       }
 
@@ -105,10 +126,12 @@
       .face_card video {
         width: 100%;
         height: 100%;
+        -o-object-fit: cover;
         object-fit: cover;
       }
 
       .face_card.face_card_back {
+        -webkit-transform: rotateY(180deg);
         transform: rotateY(180deg);
         background-color: black;
       }
@@ -121,6 +144,28 @@
         letter-spacing: 2px;
         pointer-events: none;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      @media (max-width: 768px) {
+        .mensaje {
+          font-size: 1.2em;
+          margin-bottom: 30px;
+          margin-top: -10px;
+        }
+        .card {
+          width: 260px;
+          height: 350px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .mensaje {
+          font-size: 1em;
+        }
+        .card {
+          width: 220px;
+          height: 300px;
+        }
       }
     </style>
   </head>
@@ -149,10 +194,11 @@
           </div>
         </div>
       </div>
+      
+      <p class="instr">(Pasa el cursor o toca la tarjeta)</p>
     </div>
 
     <script>
-      /* --- FONDO ANIMADO DE ESTRELLAS Y NEBULOSAS --- */
       const canvas = document.getElementById("space-bg");
       const ctx = canvas.getContext("2d");
 
@@ -267,29 +313,40 @@
       resize();
       animate();
 
-      /* --- CONTROL DE VIDEO Y GIRO DE TARJETA --- */
       const tarjeta = document.getElementById("tarjeta-magica");
       const video = document.getElementById("myVideo");
 
-      // Cuando el cursor entra en la tarjeta
-      tarjeta.addEventListener("mouseenter", () => {
-        tarjeta.classList.add("is-flipped"); // Gira la tarjeta
-        video.currentTime = 0;
-        video.play().catch((error) => {
-          video.muted = true;
-          video.play();
-        });
+      function triggerFlip() {
+        if (!tarjeta.classList.contains("is-flipped")) {
+          tarjeta.classList.add("is-flipped");
+          video.currentTime = 0;
+          video.play().catch((error) => {
+            video.muted = true;
+            video.play();
+          });
+        }
+      }
+
+      function triggerUnflip() {
+        if (tarjeta.classList.contains("is-flipped")) {
+          tarjeta.classList.remove("is-flipped");
+          video.pause();
+        }
+      }
+
+      tarjeta.addEventListener("mouseenter", triggerFlip);
+      tarjeta.addEventListener("mouseleave", triggerUnflip);
+
+      tarjeta.addEventListener("click", () => {
+        if (tarjeta.classList.contains("is-flipped")) {
+          triggerUnflip();
+        } else {
+          triggerFlip();
+        }
       });
 
-      // Cuando el cursor sale de la tarjeta
-      tarjeta.addEventListener("mouseleave", () => {
-        tarjeta.classList.remove("is-flipped"); // Regresa la tarjeta
-        video.pause();
-      });
-
-      // Evento nuevo: Cuando el video termina
       video.addEventListener("ended", () => {
-        tarjeta.classList.remove("is-flipped"); // Regresa la tarjeta automáticamente
+        tarjeta.classList.remove("is-flipped");
       });
     </script>
   </body>
