@@ -90,12 +90,14 @@
         cursor: pointer;
         -webkit-transform-style: preserve-3d;
         transform-style: preserve-3d;
-        -webkit-transition: -webkit-transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        -webkit-transition: -webkit-transform 0.8s
+          cubic-bezier(0.68, -0.55, 0.27, 1.55);
         -o-transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         box-shadow: 0 10px 30px rgba(137, 43, 226, 0.418);
         outline: none;
         -webkit-tap-highlight-color: transparent;
+        border-radius: 20px;
       }
 
       .card.is-flipped {
@@ -120,6 +122,8 @@
         -webkit-transition: 0.8s;
         -o-transition: 0.8s;
         transition: 0.8s;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        mask-image: radial-gradient(white, black);
       }
 
       .face_card img,
@@ -128,6 +132,7 @@
         height: 100%;
         -o-object-fit: cover;
         object-fit: cover;
+        border-radius: 20px;
       }
 
       .face_card.face_card_back {
@@ -194,8 +199,6 @@
           </div>
         </div>
       </div>
-      
-      <p class="instr">(Pasa el cursor o toca la tarjeta)</p>
     </div>
 
     <script>
@@ -315,22 +318,40 @@
 
       const tarjeta = document.getElementById("tarjeta-magica");
       const video = document.getElementById("myVideo");
+      let playPromise;
 
       function triggerFlip() {
         if (!tarjeta.classList.contains("is-flipped")) {
           tarjeta.classList.add("is-flipped");
           video.currentTime = 0;
-          video.play().catch((error) => {
-            video.muted = true;
-            video.play();
-          });
+          video.muted = false;
+
+          playPromise = video.play();
+
+          if (playPromise !== undefined) {
+            playPromise.catch((error) => {
+              video.muted = true;
+              video.play();
+            });
+          }
         }
       }
 
       function triggerUnflip() {
         if (tarjeta.classList.contains("is-flipped")) {
           tarjeta.classList.remove("is-flipped");
-          video.pause();
+
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                video.pause();
+              })
+              .catch(() => {
+                video.pause();
+              });
+          } else {
+            video.pause();
+          }
         }
       }
 
