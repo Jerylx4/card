@@ -1,19 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Para ti</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       body {
         margin: 0;
         padding: 0;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 700; 
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
         background-color: black;
         overflow: hidden;
         height: 100vh;
@@ -28,31 +31,32 @@
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -1; 
+        z-index: -1;
       }
 
       .main-container {
         position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: center; 
-        align-items: center; 
+        justify-content: center;
+        align-items: center;
         width: 100%;
         height: 100%;
         padding: 20px;
         box-sizing: border-box;
-        z-index: 1; 
+        z-index: 1;
       }
 
       .mensaje {
-        max-width: 650px; 
+        max-width: 650px;
         text-align: center;
-        font-size: 1.6em; 
+        font-size: 1.6em;
         line-height: 1.4;
-        margin-bottom: 60px; 
-        margin-top: -30px; 
-        text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8), 
-                     -1px -1px 0px rgba(0, 0, 0, 0.8);
+        margin-bottom: 60px;
+        margin-top: -30px;
+        text-shadow:
+          2px 2px 0px rgba(0, 0, 0, 0.8),
+          -1px -1px 0px rgba(0, 0, 0, 0.8);
         letter-spacing: -0.5px;
         color: #fff;
       }
@@ -66,20 +70,20 @@
 
       .card {
         position: relative;
-        width: 300px; 
+        width: 300px;
         height: 400px;
         cursor: pointer;
         transform-style: preserve-3d;
         border-radius: 20px;
         transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         box-shadow: 0 10px 30px rgba(137, 43, 226, 0.418);
-        outline: none; 
+        outline: none;
       }
 
-      /* Efecto HOVER restaurado */
-      .card:hover {
+      /* Clase controlada por JS en lugar de :hover directo */
+      .card.is-flipped {
         transform: rotateY(180deg);
-        box-shadow: 0 15px 40px rgba(138, 43, 226, 0.4) ; /* Resplandor morado al girar */
+        box-shadow: 0 15px 40px rgba(138, 43, 226, 0.4);
       }
 
       .face_card {
@@ -92,7 +96,7 @@
         overflow: hidden;
         backface-visibility: hidden;
         background-color: #111;
-        border: 2px solid rgba(138, 43, 226, 0.3); 
+        border: 2px solid rgba(138, 43, 226, 0.3);
         box-sizing: border-box;
         transition: 0.8s;
       }
@@ -101,14 +105,14 @@
       .face_card video {
         width: 100%;
         height: 100%;
-        object-fit: cover; 
+        object-fit: cover;
       }
 
       .face_card.face_card_back {
         transform: rotateY(180deg);
         background-color: black;
       }
-      
+
       .instr {
         font-size: 0.9rem;
         color: rgba(255, 255, 255, 0.6);
@@ -116,7 +120,7 @@
         text-transform: uppercase;
         letter-spacing: 2px;
         pointer-events: none;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
       }
     </style>
   </head>
@@ -125,20 +129,21 @@
     <canvas id="space-bg"></canvas>
 
     <div class="main-container">
-      
       <p class="mensaje">
-        Hace mucho quería decirte algo, pero no he tenido la valentía de decirte, sin embargo, hoy me he animado y qué mejor forma de hacerlo desde el corazón y haciendo lo mejor que sé hacer, programar.
+        Sé que has tenido semanas muy pesadas, así que decidí darte una pequeña
+        sorpresa. Ahorré un poco y te regalaré un cupón válido para una orden de
+        pollito campero que tu quieras. Pasa el mouse por la tarjeta o
+        presionalo para ver el cupón y espero lo disfrutes, tecueme<3.
       </p>
 
       <div class="escena">
         <div class="card" id="tarjeta-magica">
-          
           <div class="face_card face_card_front">
             <img src="b1.jpg" alt="Portada de la tarjeta" />
           </div>
 
           <div class="face_card face_card_back">
-            <video id="myVideo" playsinline loop>
+            <video id="myVideo" playsinline>
               <source src="rickroll.mp4" type="video/mp4" />
             </video>
           </div>
@@ -148,19 +153,21 @@
 
     <script>
       /* --- FONDO ANIMADO DE ESTRELLAS Y NEBULOSAS --- */
-      const canvas = document.getElementById('space-bg');
-      const ctx = canvas.getContext('2d');
+      const canvas = document.getElementById("space-bg");
+      const ctx = canvas.getContext("2d");
 
       let w, h;
       let stars = [];
       let nebulas = [];
 
       const STAR_COUNT = 150;
-      const NEBULA_COUNT = 6; // Reducido un poco porque ahora son más grandes
+      const NEBULA_COUNT = 6;
       const MAX_STAR_SIZE = 1.5;
 
       class Star {
-        constructor() { this.init(); }
+        constructor() {
+          this.init();
+        }
         init() {
           this.x = Math.random() * w;
           this.y = Math.random() * h;
@@ -180,7 +187,7 @@
         }
         draw() {
           ctx.globalAlpha = this.alpha;
-          ctx.fillStyle = 'white';
+          ctx.fillStyle = "white";
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
           ctx.fill();
@@ -188,15 +195,15 @@
       }
 
       class Nebula {
-        constructor() { this.init(); }
+        constructor() {
+          this.init();
+        }
         init() {
           this.x = Math.random() * w;
           this.y = Math.random() * h;
-          // Nebulosas mucho más grandes (entre 80 y 180 de radio base)
-          this.baseSize = Math.random() * 100 + 80; 
-          // Opacidad más baja para que el tamaño grande no sature el fondo
-          this.alpha = Math.random() * 0.3 + 0.1; 
-          this.fadeSpeed = Math.random() * 0.002 + 0.001; 
+          this.baseSize = Math.random() * 100 + 80;
+          this.alpha = Math.random() * 0.3 + 0.1;
+          this.fadeSpeed = Math.random() * 0.002 + 0.001;
           this.fadingOut = Math.random() > 0.5;
         }
         update() {
@@ -211,13 +218,17 @@
         draw() {
           ctx.globalAlpha = this.alpha;
           let gradient = ctx.createRadialGradient(
-            this.x, this.y, 0,
-            this.x, this.y, this.baseSize * 2
+            this.x,
+            this.y,
+            0,
+            this.x,
+            this.y,
+            this.baseSize * 2,
           );
-          gradient.addColorStop(0, 'rgba(138, 43, 226, 0.8)'); // Morado central suave
-          gradient.addColorStop(0.5, 'rgba(75, 0, 130, 0.2)'); // Indigo difuso
-          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); // Fusión total con el negro
-          
+          gradient.addColorStop(0, "rgba(138, 43, 226, 0.8)");
+          gradient.addColorStop(0.5, "rgba(75, 0, 130, 0.2)");
+          gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
           ctx.fillStyle = gradient;
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.baseSize * 2, 0, Math.PI * 2);
@@ -236,36 +247,49 @@
 
       function animate() {
         ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = 'black'; 
+        ctx.fillStyle = "black";
         ctx.fillRect(0, 0, w, h);
-        
-        nebulas.forEach(n => { n.update(); n.draw(); });
-        stars.forEach(s => { s.update(); s.draw(); });
-        
-        ctx.globalAlpha = 1; 
+
+        nebulas.forEach((n) => {
+          n.update();
+          n.draw();
+        });
+        stars.forEach((s) => {
+          s.update();
+          s.draw();
+        });
+
+        ctx.globalAlpha = 1;
         requestAnimationFrame(animate);
       }
 
-      window.addEventListener('resize', resize);
-      resize(); 
-      animate(); 
+      window.addEventListener("resize", resize);
+      resize();
+      animate();
 
-      /* --- CONTROL DE VIDEO AL PASAR EL CURSOR (HOVER) --- */
-      const tarjeta = document.getElementById('tarjeta-magica');
-      const video = document.getElementById('myVideo');
+      /* --- CONTROL DE VIDEO Y GIRO DE TARJETA --- */
+      const tarjeta = document.getElementById("tarjeta-magica");
+      const video = document.getElementById("myVideo");
 
       // Cuando el cursor entra en la tarjeta
-      tarjeta.addEventListener('mouseenter', () => {
-        video.currentTime = 0; 
-        video.play().catch(error => {
+      tarjeta.addEventListener("mouseenter", () => {
+        tarjeta.classList.add("is-flipped"); // Gira la tarjeta
+        video.currentTime = 0;
+        video.play().catch((error) => {
           video.muted = true;
           video.play();
         });
       });
 
       // Cuando el cursor sale de la tarjeta
-      tarjeta.addEventListener('mouseleave', () => {
+      tarjeta.addEventListener("mouseleave", () => {
+        tarjeta.classList.remove("is-flipped"); // Regresa la tarjeta
         video.pause();
+      });
+
+      // Evento nuevo: Cuando el video termina
+      video.addEventListener("ended", () => {
+        tarjeta.classList.remove("is-flipped"); // Regresa la tarjeta automáticamente
       });
     </script>
   </body>
