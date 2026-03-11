@@ -4,66 +4,82 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Para ti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    
     <style>
       body {
         margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        /* Fondo con gradiente animado suave */
-        background: linear-gradient(-45deg, #1a1a2e, #16213e, #4a1c40, #0f3460);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
+        padding: 0;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700; 
+        background-color: black;
         overflow: hidden;
         height: 100vh;
+        width: 100vw;
         color: #f0f0f0;
       }
 
-      /* Animación del fondo */
-      @keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+      /* Canvas para el fondo de estrellas y nebulosas */
+      #space-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; 
       }
 
       .main-container {
+        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center; 
         align-items: center; 
         width: 100%;
         height: 100%;
-        padding: 0 20px;
+        padding: 20px;
         box-sizing: border-box;
+        z-index: 1; 
       }
 
       .mensaje {
-        max-width: 650px; /* Evita que el texto sea muy largo en pantallas grandes */
+        max-width: 650px; 
         text-align: center;
-        font-size: 1.5em; 
-        line-height: 1.6;
-        margin-bottom: 40px; 
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-        font-weight: 300;
-        letter-spacing: 0.5px;
+        font-size: 1.6em; 
+        line-height: 1.4;
+        margin-bottom: 60px; 
+        margin-top: -30px; 
+        text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8), 
+                     -1px -1px 0px rgba(0, 0, 0, 0.8);
+        letter-spacing: -0.5px;
+        color: #fff;
       }
 
       .escena {
         perspective: 1000px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       .card {
         position: relative;
-        width: 280px; /* Tarjeta un poco más grande para apreciar el video */
-        height: 380px;
+        width: 300px; 
+        height: 400px;
         cursor: pointer;
         transform-style: preserve-3d;
-        border-radius: 15px;
+        border-radius: 20px;
         transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 30px rgba(137, 43, 226, 0.418);
+        outline: none; 
       }
 
+      /* Efecto HOVER restaurado */
       .card:hover {
         transform: rotateY(180deg);
-        box-shadow: 0 15px 40px rgba(231, 21, 109, 0.4);
+        box-shadow: 0 15px 40px rgba(138, 43, 226, 0.4) ; /* Resplandor morado al girar */
       }
 
       .face_card {
@@ -72,30 +88,42 @@
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 15px;
+        border-radius: 20px;
         overflow: hidden;
         backface-visibility: hidden;
-        background-color: #000; /* Fondo negro por defecto */
+        background-color: #111;
+        border: 2px solid rgba(138, 43, 226, 0.3); 
+        box-sizing: border-box;
+        transition: 0.8s;
       }
 
       .face_card img,
       .face_card video {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Asegura que la imagen/video llene la tarjeta sin deformarse */
+        object-fit: cover; 
       }
 
       .face_card.face_card_back {
         transform: rotateY(180deg);
+        background-color: black;
       }
-
-      .card:hover .face_card.face_card_front {
-        filter: brightness(1.2);
+      
+      .instr {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 25px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        pointer-events: none;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
       }
     </style>
   </head>
 
   <body>
+    <canvas id="space-bg"></canvas>
+
     <div class="main-container">
       
       <p class="mensaje">
@@ -103,21 +131,142 @@
       </p>
 
       <div class="escena">
-        <div class="card">
+        <div class="card" id="tarjeta-magica">
           
           <div class="face_card face_card_front">
-            <img src="b1.jpg" alt="Portada" />
+            <img src="b1.jpg" alt="Portada de la tarjeta" />
           </div>
 
           <div class="face_card face_card_back">
-            <video autoplay loop muted playsinline>
-              <source src="tu_video.mp4" type="video/mp4" />
-              Tu navegador no soporta la reproducción de videos.
+            <video id="myVideo" playsinline loop>
+              <source src="rickroll.mp4" type="video/mp4" />
             </video>
           </div>
-
         </div>
       </div>
     </div>
+
+    <script>
+      /* --- FONDO ANIMADO DE ESTRELLAS Y NEBULOSAS --- */
+      const canvas = document.getElementById('space-bg');
+      const ctx = canvas.getContext('2d');
+
+      let w, h;
+      let stars = [];
+      let nebulas = [];
+
+      const STAR_COUNT = 150;
+      const NEBULA_COUNT = 6; // Reducido un poco porque ahora son más grandes
+      const MAX_STAR_SIZE = 1.5;
+
+      class Star {
+        constructor() { this.init(); }
+        init() {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          this.size = Math.random() * MAX_STAR_SIZE;
+          this.alpha = Math.random();
+          this.fadeSpeed = Math.random() * 0.01 + 0.002;
+          this.fadingOut = true;
+        }
+        update() {
+          if (this.fadingOut) {
+            this.alpha -= this.fadeSpeed;
+            if (this.alpha <= 0.1) this.fadingOut = false;
+          } else {
+            this.alpha += this.fadeSpeed;
+            if (this.alpha >= 1) this.fadingOut = true;
+          }
+        }
+        draw() {
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = 'white';
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      class Nebula {
+        constructor() { this.init(); }
+        init() {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          // Nebulosas mucho más grandes (entre 80 y 180 de radio base)
+          this.baseSize = Math.random() * 100 + 80; 
+          // Opacidad más baja para que el tamaño grande no sature el fondo
+          this.alpha = Math.random() * 0.3 + 0.1; 
+          this.fadeSpeed = Math.random() * 0.002 + 0.001; 
+          this.fadingOut = Math.random() > 0.5;
+        }
+        update() {
+          if (this.fadingOut) {
+            this.alpha -= this.fadeSpeed;
+            if (this.alpha <= 0.05) this.fadingOut = false;
+          } else {
+            this.alpha += this.fadeSpeed;
+            if (this.alpha >= 0.4) this.fadingOut = true;
+          }
+        }
+        draw() {
+          ctx.globalAlpha = this.alpha;
+          let gradient = ctx.createRadialGradient(
+            this.x, this.y, 0,
+            this.x, this.y, this.baseSize * 2
+          );
+          gradient.addColorStop(0, 'rgba(138, 43, 226, 0.8)'); // Morado central suave
+          gradient.addColorStop(0.5, 'rgba(75, 0, 130, 0.2)'); // Indigo difuso
+          gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); // Fusión total con el negro
+          
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.baseSize * 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+        stars = [];
+        nebulas = [];
+        for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+        for (let i = 0; i < NEBULA_COUNT; i++) nebulas.push(new Nebula());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = 'black'; 
+        ctx.fillRect(0, 0, w, h);
+        
+        nebulas.forEach(n => { n.update(); n.draw(); });
+        stars.forEach(s => { s.update(); s.draw(); });
+        
+        ctx.globalAlpha = 1; 
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', resize);
+      resize(); 
+      animate(); 
+
+      /* --- CONTROL DE VIDEO AL PASAR EL CURSOR (HOVER) --- */
+      const tarjeta = document.getElementById('tarjeta-magica');
+      const video = document.getElementById('myVideo');
+
+      // Cuando el cursor entra en la tarjeta
+      tarjeta.addEventListener('mouseenter', () => {
+        video.currentTime = 0; 
+        video.play().catch(error => {
+          video.muted = true;
+          video.play();
+        });
+      });
+
+      // Cuando el cursor sale de la tarjeta
+      tarjeta.addEventListener('mouseleave', () => {
+        video.pause();
+      });
+    </script>
   </body>
 </html>
